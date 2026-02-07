@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1769818518513,
+    "nama": "Ziad",
+    "telp": "62879823435132",
+    "berat": 10,
+    "jenis": "Selimut",
+    "layanan": "Express",
+    "bayar": "Lunas",
+    "status": "Selesai",
+    "total": 200000,
+    "shopId": "ST_001"
+  },
+  {
+    "id": 1769819175903,
+    "nama": "asas",
+    "telp": "6283432323",
+    "berat": 12,
+    "jenis": "Celana",
+    "layanan": "Express",
+    "bayar": "Lunas",
+    "status": "Selesai",
+    "total": 129600,
+    "shopId": "ST_001"
+  },
+  {
+    "id": 1769853046039,
+    "nama": "asa",
+    "telp": "6289245465767",
+    "berat": 12,
+    "jenis": "Jaket",
+    "layanan": "Express",
+    "bayar": "Lunas",
+    "status": "Menunggu",
+    "total": 162000,
+    "shopId": "ST_001"
+  },
+  {
+    "id": 1769853146407,
+    "nama": "Sasa",
+    "telp": "628324343434",
+    "berat": 12,
+    "jenis": "Baju",
+    "layanan": "Fast",
+    "bayar": "Lunas",
+    "status": "Menunggu",
+    "total": 81000,
+    "shopId": "ST_001"
+  },
+  {
+    "id": 1769853275428,
+    "nama": "asasa",
+    "telp": "628324343434",
+    "berat": 56,
+    "jenis": "Baju",
+    "layanan": "Normal",
+    "bayar": "Lunas",
+    "status": "Menunggu",
+    "total": 252000,
+    "shopId": "ST_001"
+  },
+  {
+    "id": 1769853953362,
+    "nama": "asasa",
+    "telp": "6282143543212",
+    "berat": 9,
+    "jenis": "Baju",
+    "layanan": "Fast",
+    "bayar": "Lunas",
+    "status": "Menunggu",
+    "total": 67500,
+    "shopId": "ST_001"
+  },
+  {
+    "id": 1769854088691,
+    "nama": "asdsds",
+    "telp": "628324343434",
+    "berat": 121,
+    "jenis": "Baju",
+    "layanan": "Express",
+    "bayar": "Lunas",
+    "status": "Menunggu",
+    "total": 1089000,
+    "shopId": "ST_001"
+  },
+  {
+    "id": 1769883069940,
+    "nama": "asasa",
+    "telp": "628324343434",
+    "berat": 12,
+    "jenis": "Celana",
+    "layanan": "Fast",
+    "bayar": "Lunas",
+    "status": "Menunggu",
+    "total": 97200,
+    "shopId": "ST_001"
+  }
+]

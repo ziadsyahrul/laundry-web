@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk - LaundryExpress Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+
+<body>
+    <div id="loginScreen" class="login-overlay">
+        <div class="login-box">
+            <div class="login-header">
+                <i class="fas fa-tshirt fa-3x" style="color: #00d2ff; margin-bottom: 15px;"></i>
+                <h1>LaundryExpress Pro</h1>
+                <p>Silakan masuk ke panel toko Anda</p>
+            </div>
+            <div class="login-form">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="username" placeholder="Username (admin1 / admin2)">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" placeholder="Password (123 / 456)">
+                </div>
+                <button type="button" id="btnLogin" onclick="handleLogin()">Masuk Ke Sistem <i
+                        class="fas fa-sign-in-alt"></i></button>
+            </div>
+            <p id="loginError" class="error-msg">
+                <i class="fas fa-exclamation-circle"></i> Username atau Password salah!
+            </p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

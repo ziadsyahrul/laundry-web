@@ -1,0 +1,12 @@
+{
+    "admin1": {
+        "pass": "123",
+        "name": "Zaky Laundry Makassar",
+        "id": "ST_001"
+    },
+    "admin2": {
+        "pass": "456",
+        "name": "Laundry Berkah Jaya",
+        "id": "ST_002"
+    }
+}
