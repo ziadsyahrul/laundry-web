@@ -3,10 +3,16 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const app = express();
-const PORT = 5000;
+
+// UPDATE: Menggunakan port dari environment variable agar bisa jalan di hosting
+const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+
+// TAMBAHAN KRUSIAL: Memberi tahu server untuk melayani file statis dari folder frontend
+// path.join(__dirname, '../frontend') digunakan karena server.js berada di dalam folder backend
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Tentukan lokasi file database JSON
 const DB_PATH = path.join(__dirname, 'database.json');
@@ -28,17 +34,19 @@ const writeDB = (data) => {
     fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
 };
 
+// TAMBAHAN: Route untuk mengirim index.html saat pertama kali website diakses
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
+});
+
 // --- API LOGIN ---
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
     const accounts = readDB(ACCOUNTS_PATH);
 
-    // DEBUG: Cek di terminal apa yang masuk
     console.log("Login Attempt:", { username, password });
-    console.log("Available Accounts:", accounts);
-
+    
     if (accounts[username] && accounts[username].pass === password) {
-        // Jangan kirim password balik ke client
         const { pass, ...userData } = accounts[username];
         res.json({ success: true, user: userData });
     } else {
@@ -56,12 +64,12 @@ app.get('/api/orders', (req, res) => {
 app.post('/api/orders', (req, res) => {
     const orders = readDB();
     const newOrder = { 
-        id: Date.now(), // Tambah ID unik pakai timestamp
+        id: Date.now(), 
         ...req.body 
     };
     
     orders.push(newOrder);
-    writeDB(orders); // Simpan ke file database.json
+    writeDB(orders);
     
     res.status(201).json({ message: 'Order berhasil disimpan secara permanen!', data: newOrder });
 });
@@ -85,16 +93,15 @@ app.get('/api/orders/update/:id', (req, res) => {
     res.status(404).json({ message: 'Order tidak ditemukan atau sudah selesai' });
 });
 
-// Endpoint untuk ganti status bayar (Lunas/Belum Bayar)
+// Endpoint untuk ganti status bayar
 app.get('/api/orders/pay/:id', (req, res) => {
     const orders = readDB();
     const { id } = req.params;
     const index = orders.findIndex(o => o.id == id);
 
     if (index !== -1) {
-        // Logika Toggle: Jika Lunas jadi Belum Bayar, dan sebaliknya
         orders[index].bayar = (orders[index].bayar === "Lunas") ? "Belum Bayar" : "Lunas";
-        writeDB(orders); // Simpan ke database.json
+        writeDB(orders);
         return res.json({ message: 'Status bayar diperbarui!', data: orders[index] });
     }
     res.status(404).json({ message: 'Order tidak ditemukan' });
@@ -114,7 +121,7 @@ app.delete('/api/orders/:id', (req, res) => {
     res.status(404).json({ message: 'Order gagal dihapus' });
 });
 
-
+// Jalankan server
 app.listen(PORT, () => {
-    console.log(`Server jalan di http://192.168.1.3:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
