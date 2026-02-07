@@ -395,20 +395,183 @@ function kirimWA(id) {
 }
 
 function cetakStruk(id) {
+
     const o = orders.find(x => x.id === id);
+
     const tglSelesai = new Date();
+
+    // Estimasi selesai sederhana
+
     const tambahanHari = o.layanan === "Express" ? 1 : (o.layanan === "Fast" ? 2 : 3);
+
     tglSelesai.setDate(tglSelesai.getDate() + tambahanHari);
 
+
+
     const printWindow = window.open('', '_blank', 'width=450,height=800');
+
     printWindow.document.write(`
-        <html><head><title>Struk Digital - #${o.id}</title>
-        <style>body { font-family: 'Courier New', monospace; padding: 20px; }</style></head>
-        <body><h2>${currentUser.name.toUpperCase()}</h2><p>ID: #${o.id}</p><hr>
-        <p>Pelanggan: ${o.nama}</p><p>Total: Rp ${Math.round(o.total).toLocaleString('id-ID')}</p>
-        <script>window.onload = function() { window.print(); }</script></body></html>
+
+        <html>
+
+        <head>
+
+            <title>Struk Digital - #${o.id}</title>
+
+            <style>
+
+                body { background-color: #f3f4f6; display: flex; justify-content: center; padding: 20px; margin: 0; }
+
+                .receipt-card {
+
+                    background: white; width: 80mm; padding: 15px;
+
+                    box-shadow: 0 0 10px rgba(0,0,0,0.1); color: #000;
+
+                    font-family: 'Courier New', Courier, monospace;
+
+                }
+
+                @media print {
+
+                    body { background: none; padding: 0; display: block; }
+
+                    .receipt-card { box-shadow: none; margin: 0 auto; width: 100%; max-width: 80mm; }
+
+                }
+
+                .header { text-align: center; border-bottom: 2px double #000; padding-bottom: 10px; margin-bottom: 10px; }
+
+                .header h2 { margin: 0; font-size: 18px; }
+
+                .info-table, .item-table { width: 100%; font-size: 12px; border-collapse: collapse; }
+
+                .item-table th { border-bottom: 1px dashed #000; padding: 5px 0; text-align: left; }
+
+                .item-table td { padding: 5px 0; }
+
+                .total-box { text-align: right; border-top: 1px dashed #000; padding-top: 10px; margin-top: 10px; }
+
+                .footer { text-align: center; font-size: 10px; margin-top: 15px; border-top: 1px dashed #000; padding-top: 10px; }
+
+                .qr-code { margin-top: 15px; text-align: center; }
+
+            </style>
+
+        </head>
+
+        <body>
+
+            <div class="receipt-card">
+
+                <div class="header">
+
+                    <h2>${currentUser.name.toUpperCase()}</h2>
+
+                    <p style="font-size: 10px; margin: 5px 0;">Jl. Perintis Kemerdekaan, Makassar</p>
+
+                    <p style="font-size: 11px; font-weight: bold;">ID: #${o.id}</p>
+
+                </div>
+
+
+
+                <table class="info-table">
+
+                    <tr><td>Tgl Masuk :</td><td align="right">${new Date().toLocaleDateString('id-ID')}</td></tr>
+
+                    <tr><td>Tgl Keluar:</td><td align="right">~ ${tglSelesai.toLocaleDateString('id-ID')}</td></tr>
+
+                    <tr><td>Pelanggan :</td><td align="right">${o.nama}</td></tr>
+
+                    <tr><td>WhatsApp  :</td><td align="right">${o.telp}</td></tr>
+
+                    <tr><td>Kasir     :</td><td align="right">${currentUser.username || 'Admin'}</td></tr>
+
+                </table>
+
+
+
+                <table class="item-table" style="margin-top: 10px;">
+
+                    <thead>
+
+                        <tr><th>ITEM/LAYANAN</th><th align="right">QTY/BRT</th></tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+
+                            <td>${o.jenis} (${o.layanan})</td>
+
+                            <td align="right">${o.berat} kg</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td colspan="2" style="font-size: 10px; color: #555;">Status: ${o.status} | Pembayaran: ${o.bayar}</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+
+
+                <div class="total-box">
+
+                    ${o.berat > 10 ? '<span style="font-size: 10px;">Diskon Member 10%: Berlaku</span><br>' : ''}
+
+                    <span style="font-size: 11px;">GRAND TOTAL:</span><br>
+
+                    <span style="font-size: 20px; font-weight: bold;">Rp ${Math.round(o.total).toLocaleString('id-ID')}</span>
+
+                </div>
+
+
+
+                <div class="qr-code">
+
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://wa.me/${o.telp}" alt="QR WA">
+
+                    <p style="font-size: 8px; margin-top: 5px;">Scan untuk cek status via WhatsApp</p>
+
+                </div>
+
+
+
+                <div class="footer">
+
+                    * TERIMA KASIH *<br>
+
+                    Barang yang sudah diambil tidak dapat ditukar.<br>
+
+                    Simpan struk ini sebagai bukti pengambilan.<br>
+
+                    - - - - - - - - ✂ - - - - - - - -
+
+                </div>
+
+            </div>
+
+            <script>
+
+                window.onload = function() { window.print(); }
+
+            </script>
+
+        </body>
+
+        </html>
+
     `);
+
     printWindow.document.close();
+
 }
 
 function changeTab(t) {
