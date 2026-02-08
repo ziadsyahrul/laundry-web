@@ -273,6 +273,182 @@ function renderTable() {
     });
 }
 
+function cetakLaporanBulanan() {
+
+    const sekarang = new Date();
+
+    const bulanSekarang = sekarang.getMonth();
+
+    const tahunSekarang = sekarang.getFullYear();
+
+    const namaBulan = sekarang.toLocaleString('id-ID', { month: 'long' });
+
+
+
+    // 1. Filter data berdasarkan bulan & tahun transaksi (berdasarkan ID timestamp)
+
+    const dataBulanIni = orders.filter(o => {
+
+        const tglOrder = new Date(o.id);
+
+        return tglOrder.getMonth() === bulanSekarang && tglOrder.getFullYear() === tahunSekarang;
+
+    });
+
+
+
+    if (dataBulanIni.length === 0) {
+
+        return showToast("Tidak ada data transaksi untuk bulan ini", "error");
+
+    }
+
+
+
+    // 2. Hitung Ringkasan
+
+    const totalOmzet = dataBulanIni.reduce((s, o) => s + o.total, 0);
+
+    const totalLunas = dataBulanIni.filter(o => o.bayar === "Lunas").reduce((s, o) => s + o.total, 0);
+
+    const totalPiutang = totalOmzet - totalLunas;
+
+
+
+    // 3. Generate HTML untuk Jendela Cetak
+
+    const printWindow = window.open('', '_blank');
+
+    printWindow.document.write(`
+
+        <html>
+
+        <head>
+
+            <title>Laporan Bulanan - ${namaBulan} ${tahunSekarang}</title>
+
+            <style>
+
+                body { font-family: Arial, sans-serif; padding: 40px; color: #333; }
+
+                .header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+
+                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+
+                th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+
+                th { background-color: #f2f2f2; }
+
+                .summary { margin-top: 30px; float: right; width: 300px; }
+
+                .summary-item { display: flex; justify-content: space-between; padding: 5px 0; }
+
+                .total { font-weight: bold; border-top: 1px solid #333; margin-top: 5px; padding-top: 5px; }
+
+                @media print { .no-print { display: none; } }
+
+            </style>
+
+        </head>
+
+        <body>
+
+            <div class="header">
+
+                <h2>LAPORAN PENDAPATAN BULANAN</h2>
+
+                <h3>${currentUser.name.toUpperCase()}</h3>
+
+                <p>Periode: ${namaBulan} ${tahunSekarang}</p>
+
+            </div>
+
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Tgl</th>
+
+                        <th>Pelanggan</th>
+
+                        <th>Layanan</th>
+
+                        <th>Status</th>
+
+                        <th>Pembayaran</th>
+
+                        <th>Total</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    ${dataBulanIni.map(o => `
+
+                        <tr>
+
+                            <td>${new Date(o.id).toLocaleDateString('id-ID')}</td>
+
+                            <td>${o.nama}</td>
+
+                            <td>${o.jenis} (${o.layanan})</td>
+
+                            <td>${o.status}</td>
+
+                            <td>${o.bayar}</td>
+
+                            <td>Rp ${Math.round(o.total).toLocaleString('id-ID')}</td>
+
+                        </tr>
+
+                    `).join('')}
+
+                </tbody>
+
+            </table>
+
+
+
+            <div class="summary">
+
+                <div class="summary-item"><span>Total Transaksi:</span> <span>${dataBulanIni.length}</span></div>
+
+                <div class="summary-item"><span>Total Omzet:</span> <span>Rp ${Math.round(totalOmzet).toLocaleString('id-ID')}</span></div>
+
+                <div class="summary-item"><span>Uang Masuk (Lunas):</span> <span>Rp ${Math.round(totalLunas).toLocaleString('id-ID')}</span></div>
+
+                <div class="summary-item"><span>Piutang:</span> <span style="color:red;">Rp ${Math.round(totalPiutang).toLocaleString('id-ID')}</span></div>
+
+                <div class="summary-item total"><span>NET INCOME:</span> <span>Rp ${Math.round(totalLunas).toLocaleString('id-ID')}</span></div>
+
+            </div>
+
+
+
+            <script>
+
+                window.onload = function() { window.print(); }
+
+            </script>
+
+        </body>
+
+        </html>
+
+    `);
+
+    printWindow.document.close();
+
+}
+
+
+
 let orderIdToDelete = null; 
 
 function closeDeleteModal() {
